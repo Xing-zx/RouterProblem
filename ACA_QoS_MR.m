@@ -1,10 +1,10 @@
-function [MRT,EDGES,cost]=ACA_QoS_MR(C,D,S,E,Dmax,K,M,Alpha,Beta,Gamma,Tau,Rho,Q)
+function [MRT,EDGES,cost]=ACA_QoS_MR(C,D,S,E,Dmax,K,M,Alpha,Beta,Gamma,Rho,Q)
 %% Ant Colony Algorithm for QoS Multicast Routing
 %  QoS组播路由蚁群算法
 %  GreenSim团队原创作品，转载请注明
 %  Email:greensim@163.com
 %  GreenSim团队主页：http://blog.sina.com.cn/greensim
-%  [color=red]欢迎访问GreenSim??算法仿真团队→[url=http://blog.sina.com.cn/greensim]http://blog.sina.com.cn/greensim[/url][/color]
+%  欢迎访问GreenSim??算法仿真团队→[url=http://blog.sina.com.cn/greensim]http://blog.sina.com.cn/greensim[/url][/color]
 %% 输入参数列表
 %  C            费用邻接矩阵（N×N）
 %  D            延时邻接矩阵（N×N）
@@ -25,6 +25,12 @@ function [MRT,EDGES,cost]=ACA_QoS_MR(C,D,S,E,Dmax,K,M,Alpha,Beta,Gamma,Tau,Rho,Q
 %  cost         最优组播树的费用
 %%
 %% 第一步：变量初始化
+M=18;
+Alpha=1;
+Beta=5;
+Gamma=5;
+Rho=0.5;
+Q=1;
 N=size(C,1);%网络节点个数为N
 P=length(E);%目的节点个数为M
 MRT=zeros(N,N);
@@ -54,18 +60,22 @@ for p=1:P
                     DW(j)=inf;
                 end
             end
-            LJD=find(DW<inf);%可选节点集
+            DW(find(DW>0 & DW < Inf))
+            LJD=find(DW > 0 & DW < Inf);%可选节点集
             Len_LJD=length(LJD);%可选节点的个数
-%%        觅食停止条件：蚂蚁未遇到食物或者陷入死胡同
+%%        觅食停止条件：蚂蚁遇到食物或者陷入死胡同
             while (W~=E(p))&&(Len_LJD>=1)
 %%            第五步：转轮赌法选择下一步怎么走
                 PP=zeros(1,Len_LJD);
                 for i=1:Len_LJD
+                    if Len_LJD==1
+                        disp("pause");
+                    end
                     PP(i)=(Tau(W,LJD(i))^Alpha)*(C(W,LJD(i))^Beta)*(D(W,LJD(i))^Gamma);
                 end
-                PP=PP/(sum(PP));%建立概率分布
-                Pcum=cumsum(PP);
-                Select=find(Pcum>=rand);
+                PP=PP/(sum(PP))%建立概率分布
+                Pcum=cumsum(PP)
+                Select=find(Pcum>=rand)
                 to_visit=LJD(Select(1));%下一步将要前往的节点
 %%            第六步：状态更新和记录
                 Path=[Path,to_visit];%路径增加
