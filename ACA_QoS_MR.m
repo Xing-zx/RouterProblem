@@ -60,7 +60,6 @@ for p=1:P
                     DW(j)=inf;
                 end
             end
-            DW(find(DW>0 & DW < Inf))
             LJD=find(DW > 0 & DW < Inf);%可选节点集
             Len_LJD=length(LJD);%可选节点的个数
 %%        觅食停止条件：蚂蚁遇到食物或者陷入死胡同
@@ -68,13 +67,10 @@ for p=1:P
 %%            第五步：转轮赌法选择下一步怎么走
                 PP=zeros(1,Len_LJD);
                 for i=1:Len_LJD
-                    if Len_LJD==1
-                        disp("pause");
-                    end
                     PP(i)=(Tau(W,LJD(i))^Alpha)*(C(W,LJD(i))^Beta)*(D(W,LJD(i))^Gamma);
                 end
-                PP=PP/(sum(PP))%建立概率分布
-                Pcum=cumsum(PP)
+                PP=PP/(sum(PP));%建立概率分布
+                Pcum=cumsum(PP);
                 Select=find(Pcum>=rand)
                 to_visit=LJD(Select(1));%下一步将要前往的节点
 %%            第六步：状态更新和记录
@@ -98,7 +94,7 @@ for p=1:P
                         DW(j)=inf;
                     end
                 end
-                LJD=find(DW<inf);%可选节点集
+                LJD=find(DW<inf & DW >0);%可选节点集
                 Len_LJD=length(LJD);%可选节点的个数
 %%
             end
@@ -171,7 +167,7 @@ T2=ceil(T1/N);
 T3=mod(T1,N);
 EDGES=[T3,T2];
 %% 绘收敛曲线
-figure(1)
+figure(3)
 COSTS2=zeros(M,K,P);
 DELAYS2=zeros(M,K,P);
 for p=1:P

@@ -85,5 +85,5 @@ for i=1:(NodeAmount-1)
         end
     end
 end
-Net_plot(BorderLength,NodeAmount,Sxy,Cost,Delay,DelayJitter,PacketLoss,PlotIf,FlagIf)
+%Net_plot_text(BorderLength,NodeAmount,Sxy,Cost,Delay,DelayJitter,PacketLoss,PlotIf,FlagIf)
 
