@@ -42,9 +42,9 @@ HistoryBestRoutes=cell(m,1);%各粒子的历史最优路径
 HistoryBestFitness=cell(m,1);
 AllBestRoutes=cell(m,1);%全局最优路径
 AllBestFitness=cell(m,1);
-for i=1:m   %源节点 2个
-        s=S(i);
-         [ROUTEst,FitFlag,HR,HFF,AR,AFF]=PSOUC(s,T,r1,r2,r3,P,Q,AM,Cost,Delay,DelayJitter,PacketLoss,QoSD,QoSDJ,QoSPL,Alpha,Beta,Gamma,Delta);
+for i=1:100   %源节点 2个
+%         s=S(i);
+         [ROUTEst,FitFlag,HR,HFF,AR,AFF]=PSOUC(S,T,r1,r2,r3,P,Q,AM,Cost,Delay,DelayJitter,PacketLoss,QoSD,QoSDJ,QoSPL,Alpha,Beta,Gamma,Delta);
 %         [MRT,EDGES,cost]=ACA_QoS_MR(Cost,Delay,s,T,QoSD,Q,P,5,5,5,0.7,0.7);
        
         AllRoutes{i}=ROUTEst;
