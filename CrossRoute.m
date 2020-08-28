@@ -8,7 +8,7 @@ function newTree=CrossRoute(Tree1,Tree2,Target)
     %将paths2中的该目标结点路径替换paths1的目标结点路径
     paths1{T,1}=paths2{T,1};
     paths1{T,2}=paths2{T,2};
-    newTree=composeTree(paths1);
+    newTree=composeTree(paths1,T);
 end
 % function [duplicates,indexs]=findDuplicate(A)
 % 
@@ -43,7 +43,7 @@ end
 %     end
 % end
 
-function newTree =composeTree(paths)
+function newTree =composeTree(paths,T)
     temp=cell(1,2);
     for i=1:size(paths,1)
         temp{1,1}=[temp{1,1},paths{i,1}];
@@ -53,18 +53,26 @@ function newTree =composeTree(paths)
     C=temp{1,1};
     P=temp{1,2};
     [~,indexs]=findDuplicate(C);
-    Next=true(1,length(C));
-    if ~isempty(indexs)
-        for i=1:length(indexs)
-            node1=C(indexs(i));
-%             node2=P(indexs(i));
-            del=find(C==node1);
-%             del2=find(P==node2);
-%             del=intersect(del1,del2);
-            del(1)=[];
-            Next(del)=false;
-        end
+    Del=setdiff(C,[P,T]);
+    while ~isempty(Del)
+        Next=true(1,length(C));
+        [~,index]=ismember(Del,C);
+        Next(index)=false;
+        C=C(Next);
+        P=P(Next);
+        Del=setdiff(C,[P,T]);
     end
-    newTree{1,1}=C(Next);
-    newTree{1,2}=P(Next);
+%     if ~isempty(indexs)
+%         for i=1:length(indexs)
+%             node1=C(indexs(i));
+% %             node2=P(indexs(i));
+%             del=find(C==node1);
+% %             del2=find(P==node2);
+% %             del=intersect(del1,del2);
+%             del(1)=[];
+%             Next(del)=false;
+%         end
+%     end
+    newTree{1,1}=C;
+    newTree{1,2}=P;
 end

@@ -28,7 +28,7 @@ if PlotIf==1
                     Str2=num2str(1000000*Delay(i,j));
                     Str3=num2str(1000000*DelayJitter(i,j));
                     Str4=num2str(100*PacketLoss(i,j));
-                    Str1=Str1(1:3);
+                    Str1=Str1 (1:3);
                     Str2=Str2(1:3);
                     Str3=Str3(1:3);
                     Str4=Str4(1:3);

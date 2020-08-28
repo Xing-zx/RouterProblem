@@ -1,5 +1,5 @@
-%% QoS选播路由的粒子群算法仿真主函数
-
+%% QoS多播路由仿真主函数
+hold off
 %%第一步：产生网络拓扑结构
 BorderLength=10;    %正方形区域的边长，单位：km
 NodeAmount=30;      %网络节点的个数
@@ -9,16 +9,15 @@ PlotIf=1;           %是否画网络拓扑图，如果为1则画图，否则不画
 FlagIf=0;           %是否标注参数，如果为1则将标注边的参数，0是 不标注
 [Sxy,AM,Cost,Delay,DelayJitter,PacketLoss]=NetCreate(BorderLength,NodeAmount,Alpha,Beta,PlotIf,FlagIf);
 
-%%第二步：使用粒子群算法搜索最优路径，存储数据，输出最优结果和收敛曲线
-%%%%%%%%%%%%%%%%%  以  下  是  参  数  设  置  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% GreenSim团队原创作品，转载请注明（http://blog.sina.com.cn/greensim）
-S=[2,4];            %源节点的集合，用向量存储
+%%第二步：使用算法搜索最优路径，存储数据，输出最优结果和收敛曲线
+%%%%%%%%%%%%%%%%%  以 下 PSO 是  参  数  设  置  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+S=[2];            %源节点的集合，用向量存储
 T=[25,27,29];       %目的节点的几何，用向量存储
 Alpha=1;            %适应值计算式中费用的系数
 Beta=5e5;           %适应值计算式中延时的系数
 Gamma=3e6;          %适应值计算式中延时抖动的系数
 Delta=1000;         %适应值计算式中丢包率的系数
-QoSD=100e-6;        %延时的QoS约束
+QoSD=100e-2;        %延时的QoS约束
 QoSDJ=100e-6;       %延时抖动的QoS约束
 QoSPL=0.02;         %丢包率的QoS约束
 r1=0.1;             %单个粒子的历史最优个体对当前粒子的影响系数，0<r1<=1
@@ -26,7 +25,15 @@ r2=0.3;             %粒子群的全局最优个体对当前粒子的影响系数，0<r2<=1
 r3=0.2;             %粒子随机游动的影响系数，0<=r3<=1，r3可以为0，这时将关闭随机游动功能
 P=10;               %粒子的个数
 Q=20;               %迭代次数
+%%%%%%%%%%%%%%%%%  以 下 是 蚁 群 参 数 设 置   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% M=18;
+% Alpha=1;
+% Beta=5;
+% Gamma=5;
+% Rho=0.5;
+% Q=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 m=length(S); %m=2
 n=length(T); %n=3
 AllRoutes=cell(m,1);%各粒子经过的全部路径
@@ -35,25 +42,22 @@ HistoryBestRoutes=cell(m,1);%各粒子的历史最优路径
 HistoryBestFitness=cell(m,1);
 AllBestRoutes=cell(m,1);%全局最优路径
 AllBestFitness=cell(m,1);
-Rho =0.7;
 for i=1:m   %源节点 2个
-%     for j=1:n  %目的节点 3个
         s=S(i);
-%         [ROUTEst,FitFlag,HR,HFF,AR,AFF]=PSOUC(s,T,r1,r2,r3,P,Q,AM,Cost,Delay,DelayJitter,PacketLoss,QoSD,QoSDJ,QoSPL,Alpha,Beta,Gamma,Delta);
-        [MRT,EDGES,cost]=ACA_QoS_MR(Cost,Delay,s,T,QoSD,Q,P,5,5,5,0.7,0.7);
+         [ROUTEst,FitFlag,HR,HFF,AR,AFF]=PSOUC(s,T,r1,r2,r3,P,Q,AM,Cost,Delay,DelayJitter,PacketLoss,QoSD,QoSDJ,QoSPL,Alpha,Beta,Gamma,Delta);
+%         [MRT,EDGES,cost]=ACA_QoS_MR(Cost,Delay,s,T,QoSD,Q,P,5,5,5,0.7,0.7);
        
-%         AllRoutes{i}=ROUTEst;
-%         AllFitness{i}=FitFlag;
-%         HistoryBestRoutes{i}=HR;
-%         HistoryBestFitness{i}=HFF;
-%         AllBestRoutes{i}=AR;
-%         AllBestFitness{i}=AFF;
-%     end
+        AllRoutes{i}=ROUTEst;
+        AllFitness{i}=FitFlag;
+        HistoryBestRoutes{i}=HR;
+        HistoryBestFitness{i}=HFF;
+        AllBestRoutes{i}=AR;
+        AllBestFitness{i}=AFF;
 end
 
 
 figure(4)
-Net_plot(BorderLength,NodeAmount,Sxy,PlotIf,0,MRT);
+Net_plot(BorderLength,NodeAmount,Sxy,PlotIf,1,AllBestRoutes{1,1}{1,20});
 
 %下面整理最优结果
 % SYZ=Inf;

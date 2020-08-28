@@ -61,7 +61,7 @@ for i=1:(NodeAmount-1)
         if P>rand  && Distance<4
             AM(i,j)=1;
             AM(j,i)=1;
-            Delay(i,j)=0.5*Distance/100000;
+            Delay(i,j)=0.5*Distance/1000;
             Delay(j,i)=Delay(i,j);
             Cost(i,j)=2+8*rand;
             Cost(j,i)=Cost(i,j);
@@ -85,5 +85,5 @@ for i=1:(NodeAmount-1)
         end
     end
 end
-%Net_plot_text(BorderLength,NodeAmount,Sxy,Cost,Delay,DelayJitter,PacketLoss,PlotIf,FlagIf)
+% Net_plot_text(BorderLength,NodeAmount,Sxy,Cost,Delay,DelayJitter,PacketLoss,PlotIf,FlagIf)
 

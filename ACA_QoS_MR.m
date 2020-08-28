@@ -1,10 +1,6 @@
 function [MRT,EDGES,cost]=ACA_QoS_MR(C,D,S,E,Dmax,K,M,Alpha,Beta,Gamma,Rho,Q)
 %% Ant Colony Algorithm for QoS Multicast Routing
 %  QoS组播路由蚁群算法
-%  GreenSim团队原创作品，转载请注明
-%  Email:greensim@163.com
-%  GreenSim团队主页：http://blog.sina.com.cn/greensim
-%  欢迎访问GreenSim??算法仿真团队→[url=http://blog.sina.com.cn/greensim]http://blog.sina.com.cn/greensim[/url][/color]
 %% 输入参数列表
 %  C            费用邻接矩阵（N×N）
 %  D            延时邻接矩阵（N×N）
@@ -71,7 +67,7 @@ for p=1:P
                 end
                 PP=PP/(sum(PP));%建立概率分布
                 Pcum=cumsum(PP);
-                Select=find(Pcum>=rand)
+                Select=find(Pcum>=rand);
                 to_visit=LJD(Select(1));%下一步将要前往的节点
 %%            第六步：状态更新和记录
                 Path=[Path,to_visit];%路径增加
@@ -168,6 +164,9 @@ T3=mod(T1,N);
 EDGES=[T3,T2];
 %% 绘收敛曲线
 figure(3)
+%M 蚂蚁个数
+%K 迭代次数
+%p 目标节点个数
 COSTS2=zeros(M,K,P);
 DELAYS2=zeros(M,K,P);
 for p=1:P
@@ -190,7 +189,7 @@ for k=1:K
     len1=length(pos1);
     len2=length(pos2);
     LC1(k)=sum(costs)/len1;
-    LC2(k)=sum(delays)/len2;
+    LC2(k)=sum(delays)/len2*10000;
 end
 plot(LC1,'ko-');
 hold on
